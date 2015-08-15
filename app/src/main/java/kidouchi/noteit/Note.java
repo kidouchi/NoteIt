@@ -8,12 +8,10 @@ public class Note {
     private String _title;
     private String _text;
 
-    public Note() {}
-
-    public Note(int id) {
+    public Note(int id, String title, String text) {
         this._id = id;
-        this._title = "Untitled";
-        this._text = ""; // Every new note starts empty
+        this._title = title;
+        this._text = text; // Every new note starts empty
     }
 
     public int getId() {

@@ -52,15 +52,15 @@ public class NoteDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public void addNote(Note note) {
+    public void createNewNote() {
         noteDB.beginTransaction();
 
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_TITLE, note.getTitle());
-            values.put(COLUMN_TEXT, note.getTitle());
-
+            values.put(COLUMN_TITLE, "Untitled");
+            values.put(COLUMN_TEXT, "");
             noteDB.insert(TABLE_NOTES, null, values);
+
             noteDB.setTransactionSuccessful();
         } finally {
             noteDB.endTransaction();
@@ -68,8 +68,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
     }
 
     public Note selectNote(int id) {
-//        String query = "SELECT * FROM " + TABLE_NOTES + " WHERE " + COLUMN_ID + " = " +
-//                id;
+        //String query = "SELECT * FROM " + TABLE_NOTES + " WHERE " + COLUMN_ID + " = " + id;
 
         Cursor cursor = noteDB.query(
                 TABLE_NOTES,
@@ -81,18 +80,19 @@ public class NoteDatabase extends SQLiteOpenHelper {
                 null
         );
 
-        Note note = new Note(id);
-
         if (cursor.moveToFirst()) {
             // Find note title
             int colTitleNum = cursor.getColumnIndex(COLUMN_TITLE);
-            note.setTitle(cursor.getString(colTitleNum));
+            String title = cursor.getString(colTitleNum);
             // Find note text
             int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
-            note.setText(cursor.getString(colTextNum));
+            String text = cursor.getString(colTextNum);
+
+            Note note = new Note(id, title, text);
+            return note;
         }
 
-        return note;
+        return null;
     }
 
     public ArrayList<Note> getAllNotes() {
@@ -105,17 +105,16 @@ public class NoteDatabase extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Note note = new Note();
-
             int colIdNum = cursor.getColumnIndex(COLUMN_ID);
-            note.setId(cursor.getInt(colIdNum));
+            int rowId = cursor.getInt(colIdNum);
 
             int colTitleNum = cursor.getColumnIndex(COLUMN_TITLE);
-            note.setTitle(cursor.getString(colTitleNum));
+            String noteTitle = cursor.getString(colTitleNum);
 
             int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
-            note.setText(cursor.getString(colTextNum));
-            notes.add(note);
+            String noteText = cursor.getString(colTextNum);
+
+            notes.add(new Note(rowId, noteTitle, noteText));
 
             cursor.moveToNext();
         }

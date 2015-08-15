@@ -47,7 +47,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             super(itemView);
 
             mNoteTitleLabel = (TextView) itemView.findViewById(R.id.noteTitleLabel);
-
             itemView.setOnClickListener(this);
         }
 
