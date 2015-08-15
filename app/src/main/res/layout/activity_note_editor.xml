@@ -10,7 +10,7 @@
                 tools:context="kidouchi.noteit.activity.NoteEditorActivity">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"

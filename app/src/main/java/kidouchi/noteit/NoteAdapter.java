@@ -42,6 +42,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView mNoteTitleLabel;
+        private Note note;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
@@ -51,6 +52,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         }
 
         public void bindNote(Note note) {
+            this.note = note;
             mNoteTitleLabel.setText(note.getTitle());
         }
 
@@ -58,7 +60,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         public void onClick(View v) {
             // Start the Note Editor Activity
             NoteListActivity nla = new NoteListActivity();
-            nla.openNoteEditor(mNotes);
+            nla.startEditorActivity(note);
         }
     }
 

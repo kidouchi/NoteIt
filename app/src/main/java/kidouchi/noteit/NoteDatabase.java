@@ -52,18 +52,22 @@ public class NoteDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public void createNewNote() {
+    public Note createNewNote() {
         noteDB.beginTransaction();
+        String newTitle = "Untitled";
+        String newText = "";
 
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_TITLE, "Untitled");
-            values.put(COLUMN_TEXT, "");
-            noteDB.insert(TABLE_NOTES, null, values);
+            values.put(COLUMN_TITLE, newTitle);
+            values.put(COLUMN_TEXT, newText);
+            int rowId = (int) noteDB.insert(TABLE_NOTES, null, values);
 
             noteDB.setTransactionSuccessful();
+            return new Note(rowId, newTitle, newText);
         } finally {
             noteDB.endTransaction();
+            return null;
         }
     }
 

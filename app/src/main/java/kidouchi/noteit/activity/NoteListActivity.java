@@ -55,9 +55,16 @@ public class NoteListActivity extends Activity {
         mEditFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDB.createNewNote();
+                Note note = mDB.createNewNote();
+                startEditorActivity(note);
             }
         });
+    }
+
+    public void startEditorActivity(Note note) {
+        Intent intent = new Intent(NoteListActivity.this, NoteEditorActivity.class);
+        intent.putExtra(NOTE, note);
+        startActivity(intent);
     }
 
     @Override
@@ -75,12 +82,6 @@ public class NoteListActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mDB.close();
-    }
-
-    public void openNoteEditor(Note[] notes) {
-        Intent intent = new Intent(this, NoteEditorActivity.class);
-        intent.putExtra(NOTE, notes);
-        startActivity(intent);
     }
 
 //    @Override

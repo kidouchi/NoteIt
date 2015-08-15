@@ -1,16 +1,30 @@
 package kidouchi.noteit.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 
+import java.util.Arrays;
+
+import butterknife.Bind;
+import kidouchi.noteit.Note;
 import kidouchi.noteit.R;
 
 public class NoteEditorActivity extends AppCompatActivity {
+
+    @Bind(R.id.edit_text) EditText mEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
+
+        Intent intent = getIntent();
+        Parcelable[] parcelables = intent.getParcelableArrayExtra(NoteListActivity.NOTE);
+        Note note = Arrays.copyOf(parcelables, parcelables.length, Note[].class)[0];
+        mEditText.setText(note.getText());
     }
 
 //    @Override
