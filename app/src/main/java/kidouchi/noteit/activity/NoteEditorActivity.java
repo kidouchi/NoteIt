@@ -2,50 +2,66 @@ package kidouchi.noteit.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
-import java.util.Arrays;
+import java.sql.SQLException;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import kidouchi.noteit.Note;
+import kidouchi.noteit.NoteDatabase;
 import kidouchi.noteit.R;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
+    private NoteDatabase mDB;
+
     @Bind(R.id.edit_text) EditText mEditText;
+    @Bind(R.id.save_button) ImageButton mSaveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
+        ButterKnife.bind(this);
+
+        mDB = new NoteDatabase(this);
+        try {
+            mDB.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = getIntent();
-        Parcelable[] parcelables = intent.getParcelableArrayExtra(NoteListActivity.NOTE);
-        Note note = Arrays.copyOf(parcelables, parcelables.length, Note[].class)[0];
-        mEditText.setText(note.getText());
+        final Note note = intent.getParcelableExtra(NoteListActivity.NOTE);
+        mEditText.setText(note.getText().toString());
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String saveText = mEditText.getText().toString();
+                mDB.updateNoteText(note.getId(), saveText);
+            }
+        });
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_note_editor, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mDB.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDB.close();
+    }
 }

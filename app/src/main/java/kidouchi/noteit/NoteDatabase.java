@@ -14,6 +14,8 @@ import java.util.ArrayList;
  */
 public class NoteDatabase extends SQLiteOpenHelper {
 
+    /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
+
     private static final String DB_NAME = "noteDB.db";
     private static final int DB_VER = 1;
 
@@ -67,7 +69,6 @@ public class NoteDatabase extends SQLiteOpenHelper {
             return new Note(rowId, newTitle, newText);
         } finally {
             noteDB.endTransaction();
-            return null;
         }
     }
 
