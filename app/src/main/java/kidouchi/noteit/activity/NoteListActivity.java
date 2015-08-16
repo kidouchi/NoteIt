@@ -56,15 +56,11 @@ public class NoteListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Note note = mDB.createNewNote();
-                startEditorActivity(note);
+                Intent intent = new Intent(NoteListActivity.this, NoteEditorActivity.class);
+                intent.putExtra(NOTE, note);
+                startActivity(intent);
             }
         });
-    }
-
-    public void startEditorActivity(Note note) {
-        Intent intent = new Intent(NoteListActivity.this, NoteEditorActivity.class);
-        intent.putExtra(NOTE, note);
-        startActivity(intent);
     }
 
     @Override

@@ -133,8 +133,8 @@ public class NoteDatabase extends SQLiteOpenHelper {
         noteDB.update(
                 TABLE_NOTES,
                 values,
-                null,
-                null
+                COLUMN_ID + " = ?",
+                new String[] { id+"" }
         );
     }
 
@@ -144,8 +144,8 @@ public class NoteDatabase extends SQLiteOpenHelper {
         noteDB.update(
                 TABLE_NOTES,
                 values,
-                null,
-                null
+                COLUMN_ID + " = ?",
+                new String[] { id+"" }
         );
     }
 

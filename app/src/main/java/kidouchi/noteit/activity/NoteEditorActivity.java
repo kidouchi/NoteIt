@@ -20,6 +20,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     private NoteDatabase mDB;
 
     @Bind(R.id.edit_text) EditText mEditText;
+    @Bind(R.id.edit_title) EditText mEditTitle;
     @Bind(R.id.save_button) ImageButton mSaveButton;
 
     @Override
@@ -38,12 +39,17 @@ public class NoteEditorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Note note = intent.getParcelableExtra(NoteListActivity.NOTE);
         mEditText.setText(note.getText().toString());
+        mEditTitle.setText(note.getTitle().toString());
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String saveText = mEditText.getText().toString();
                 mDB.updateNoteText(note.getId(), saveText);
+                String saveTitle = mEditTitle.getText().toString();
+                mDB.updateNoteTitle(note.getId(), saveTitle);
+                Intent intent = new Intent(NoteEditorActivity.this, NoteListActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -57,7 +63,6 @@ public class NoteEditorActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
     @Override
     protected void onPause() {

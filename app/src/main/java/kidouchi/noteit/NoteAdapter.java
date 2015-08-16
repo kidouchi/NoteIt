@@ -1,12 +1,14 @@
 package kidouchi.noteit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import kidouchi.noteit.activity.NoteEditorActivity;
 import kidouchi.noteit.activity.NoteListActivity;
 
 
@@ -43,10 +45,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         public TextView mNoteTitleLabel;
         private Note note;
+        private Context context;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
-
+            context = itemView.getContext();
             mNoteTitleLabel = (TextView) itemView.findViewById(R.id.noteTitleLabel);
             itemView.setOnClickListener(this);
         }
@@ -59,8 +62,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         @Override
         public void onClick(View v) {
             // Start the Note Editor Activity
-            NoteListActivity nla = new NoteListActivity();
-            nla.startEditorActivity(note);
+            Intent intent = new Intent(context, NoteEditorActivity.class);
+            intent.putExtra(NoteListActivity.NOTE, note);
+            context.startActivity(intent);
         }
     }
 
