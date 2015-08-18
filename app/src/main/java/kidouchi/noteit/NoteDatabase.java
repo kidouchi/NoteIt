@@ -17,12 +17,13 @@ public class NoteDatabase extends SQLiteOpenHelper {
     /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
 
     private static final String DB_NAME = "noteDB.db";
-    private static final int DB_VER = 1;
+    private static final int DB_VER = 2;
 
     public static final String TABLE_NOTES = "table_notes";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_TEXT = "text";
+    public static final String COLUMN_SCREENSHOT = "screenshot";
 
     private SQLiteDatabase noteDB = null;
 
@@ -35,13 +36,16 @@ public class NoteDatabase extends SQLiteOpenHelper {
         String createNotesTable = "CREATE TABLE " + TABLE_NOTES + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_TITLE + " TEXT, " +
-                COLUMN_TEXT + " TEXT)";
+                COLUMN_TEXT + " TEXT, " +
+                COLUMN_SCREENSHOT + " BLOB)";
         db.execSQL(createNotesTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        String DBAlter = "ALTER TABLE " + TABLE_NOTES + " ADD COLUMN " + COLUMN_SCREENSHOT +
+                " BLOB";
+        db.execSQL(DBAlter);
     }
 
     public void open() throws SQLException {
@@ -58,15 +62,17 @@ public class NoteDatabase extends SQLiteOpenHelper {
         noteDB.beginTransaction();
         String newTitle = "Untitled";
         String newText = "";
+        byte[] newScreenshot = null;
 
         try {
             ContentValues values = new ContentValues();
             values.put(COLUMN_TITLE, newTitle);
             values.put(COLUMN_TEXT, newText);
+            values.put(COLUMN_SCREENSHOT, newScreenshot);
             int rowId = (int) noteDB.insert(TABLE_NOTES, null, values);
 
             noteDB.setTransactionSuccessful();
-            return new Note(rowId, newTitle, newText);
+            return new Note(rowId, newTitle, newText, newScreenshot);
         } finally {
             noteDB.endTransaction();
         }
@@ -92,8 +98,11 @@ public class NoteDatabase extends SQLiteOpenHelper {
             // Find note text
             int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
             String text = cursor.getString(colTextNum);
+            // Find note screenshot
+            int colScreenshotNum = cursor.getColumnIndex(COLUMN_SCREENSHOT);
+            byte[] screenshot = cursor.getBlob(colScreenshotNum);
 
-            Note note = new Note(id, title, text);
+            Note note = new Note(id, title, text, screenshot);
             return note;
         }
 
@@ -119,8 +128,10 @@ public class NoteDatabase extends SQLiteOpenHelper {
             int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
             String noteText = cursor.getString(colTextNum);
 
-            notes.add(new Note(rowId, noteTitle, noteText));
+            int colScreenshotNum = cursor.getColumnIndex(COLUMN_SCREENSHOT);
+            byte[] noteScreenshot = cursor.getBlob(colScreenshotNum);
 
+            notes.add(new Note(rowId, noteTitle, noteText, noteScreenshot));
             cursor.moveToNext();
         }
 
@@ -145,6 +156,17 @@ public class NoteDatabase extends SQLiteOpenHelper {
                 TABLE_NOTES,
                 values,
                 COLUMN_ID + " = ?",
+                new String[] { id+"" }
+        );
+    }
+
+    public void updateNoteScreenshot(int id, byte[] newScreenshot) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SCREENSHOT, newScreenshot);
+        noteDB.update(
+                TABLE_NOTES,
+                values,
+                COLUMN_ID + " =?",
                 new String[] { id+"" }
         );
     }

@@ -43,7 +43,7 @@ public class NoteListActivity extends Activity {
         // Setup the Note List Layout
         ArrayList<Note> dbNotes = mDB.getAllNotes();
         mNotes = dbNotes.toArray(new Note[dbNotes.size()]);
-        NoteAdapter adapter = new NoteAdapter(mNotes, this);
+        NoteAdapter adapter = new NoteAdapter(mNotes, this, mDB);
         mNoteCardList.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

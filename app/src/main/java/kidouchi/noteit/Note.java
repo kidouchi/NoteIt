@@ -10,11 +10,13 @@ public class Note implements Parcelable {
     private int _id;
     private String _title;
     private String _text;
+    private byte[] _screenshot;
 
-    public Note(int id, String title, String text) {
+    public Note(int id, String title, String text, byte[] screenshot) {
         this._id = id;
         this._title = title;
-        this._text = text; // Every new note starts empty
+        this._text = text;
+        this._screenshot = screenshot;
     }
 
     public int getId() {
@@ -41,6 +43,15 @@ public class Note implements Parcelable {
         this._text = text;
     }
 
+    public byte[] get_screenshot() {
+        return _screenshot;
+    }
+
+    public void set_screenshot(byte[] _screenshot) {
+        this._screenshot = _screenshot;
+    }
+
+    // Make note parcelable
     @Override
     public int describeContents() {
         return 0;
