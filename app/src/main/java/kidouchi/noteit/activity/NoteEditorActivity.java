@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,19 +41,13 @@ public class NoteEditorActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        Log.d("CHECK", intent.getExtras() + "");
         final Note note;
-        Log.d("POINT3", "HERE");
-        if (intent.getExtras() != null) {
-            Log.d("POINT5", "HERE");
+        if (intent.getParcelableExtra(NoteListActivity.NOTE) != null) {
             note = intent.getParcelableExtra(NoteListActivity.NOTE);
-            Log.d("POINT1", note+"");
             mEditText.setText(note.getText().toString());
             mEditTitle.setText(note.getTitle().toString());
         } else {
-            Log.d("POINT4", "HERE");
             note = mDB.createNewNote();
-            Log.d("POINT2", note+"");
         }
 
         // Action for when SAVE button is pressed

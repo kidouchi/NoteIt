@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import kidouchi.noteit.R;
+import kidouchi.noteit.db.NoteItDatabase;
 import kidouchi.noteit.note.Note;
 import kidouchi.noteit.note.NoteAdapter;
-import kidouchi.noteit.db.NoteItDatabase;
-import kidouchi.noteit.R;
 
 public class NoteListActivity extends Activity {
 

@@ -12,6 +12,13 @@ public class Note implements Parcelable {
     private String _text;
     private byte[] _textBitmap;
 
+    public Note(int id, String title, String text, byte[] textBitmap) {
+        this._id = id;
+        this._title = title;
+        this._text = text;
+        this._textBitmap = textBitmap;
+    }
+
     public int getId() {
         return this._id;
     }
@@ -44,13 +51,6 @@ public class Note implements Parcelable {
         this._textBitmap = _textBitmap;
     }
 
-    public Note(int id, String title, String text, byte[] textBitmap) {
-        this._id = id;
-        this._title = title;
-        this._text = text;
-        this._textBitmap = textBitmap;
-    }
-
     // Make note parcelable
     @Override
     public int describeContents() {
@@ -62,6 +62,7 @@ public class Note implements Parcelable {
         dest.writeInt(_id);
         dest.writeString(_title);
         dest.writeString(_text);
+        dest.writeInt(_textBitmap.length);
         dest.writeByteArray(_textBitmap);
     }
 
@@ -69,6 +70,7 @@ public class Note implements Parcelable {
         _id = in.readInt();
         _title = in.readString();
         _text = in.readString();
+        _textBitmap = new byte[in.readInt()];
         in.readByteArray(_textBitmap);
     }
 
