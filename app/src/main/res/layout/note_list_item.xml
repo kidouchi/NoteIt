@@ -18,10 +18,10 @@
         card_view:cardCornerRadius="4dp">
 
         <ImageView
-            android:id="@+id/note_screenshot"
+            android:id="@+id/note_bitmap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
+            android:scaleType="fitStart"
             android:background="@color/editor_background" />
 
         <ImageButton

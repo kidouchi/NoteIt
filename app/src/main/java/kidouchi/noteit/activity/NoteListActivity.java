@@ -13,16 +13,16 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import kidouchi.noteit.Note;
-import kidouchi.noteit.NoteAdapter;
-import kidouchi.noteit.NoteDatabase;
+import kidouchi.noteit.note.Note;
+import kidouchi.noteit.note.NoteAdapter;
+import kidouchi.noteit.db.NoteItDatabase;
 import kidouchi.noteit.R;
 
 public class NoteListActivity extends Activity {
 
     public static final String NOTE = "NOTE";
     private Note[] mNotes;
-    private NoteDatabase mDB;
+    private NoteItDatabase mDB;
 
     @Bind(R.id.noteList) RecyclerView mNoteCardList;
     @Bind(R.id.edit_fab) FloatingActionButton mEditFabButton;
@@ -33,7 +33,7 @@ public class NoteListActivity extends Activity {
         setContentView(R.layout.activity_note_list);
         ButterKnife.bind(this);
 
-        mDB = new NoteDatabase(this);
+        mDB = new NoteItDatabase(this);
         try {
             mDB.open();
         } catch (SQLException e) {
@@ -55,9 +55,7 @@ public class NoteListActivity extends Activity {
         mEditFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Note note = mDB.createNewNote();
                 Intent intent = new Intent(NoteListActivity.this, NoteEditorActivity.class);
-                intent.putExtra(NOTE, note);
                 startActivity(intent);
             }
         });

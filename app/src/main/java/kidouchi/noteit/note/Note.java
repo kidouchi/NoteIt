@@ -1,4 +1,4 @@
-package kidouchi.noteit;
+package kidouchi.noteit.note;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,14 +10,7 @@ public class Note implements Parcelable {
     private int _id;
     private String _title;
     private String _text;
-    private byte[] _screenshot;
-
-    public Note(int id, String title, String text, byte[] screenshot) {
-        this._id = id;
-        this._title = title;
-        this._text = text;
-        this._screenshot = screenshot;
-    }
+    private byte[] _textBitmap;
 
     public int getId() {
         return this._id;
@@ -43,12 +36,19 @@ public class Note implements Parcelable {
         this._text = text;
     }
 
-    public byte[] get_screenshot() {
-        return _screenshot;
+    public byte[] getTextBitmap() {
+        return _textBitmap;
     }
 
-    public void set_screenshot(byte[] _screenshot) {
-        this._screenshot = _screenshot;
+    public void setTextBitmap(byte[] _textBitmap) {
+        this._textBitmap = _textBitmap;
+    }
+
+    public Note(int id, String title, String text, byte[] textBitmap) {
+        this._id = id;
+        this._title = title;
+        this._text = text;
+        this._textBitmap = textBitmap;
     }
 
     // Make note parcelable
@@ -62,12 +62,14 @@ public class Note implements Parcelable {
         dest.writeInt(_id);
         dest.writeString(_title);
         dest.writeString(_text);
+        dest.writeByteArray(_textBitmap);
     }
 
     private Note(Parcel in) {
         _id = in.readInt();
         _title = in.readString();
         _text = in.readString();
+        in.readByteArray(_textBitmap);
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {

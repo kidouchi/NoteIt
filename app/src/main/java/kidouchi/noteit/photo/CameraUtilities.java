@@ -1,4 +1,4 @@
-package kidouchi.noteit;
+package kidouchi.noteit.photo;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,15 +19,15 @@ import java.util.Date;
  */
 public class CameraUtilities {
 
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private String mCurrentPhotoPath;
+    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static String mCurrentPhotoPath;
     private Activity mActivity;
 
     public CameraUtilities(Activity activity) {
         mActivity = activity;
     }
 
-    private void dispatchTakePictureIntent() {
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -62,7 +62,7 @@ public class CameraUtilities {
         return image;
     }
 
-    private void galleryAddPic() {
+    public void galleryAddPic() {
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file = new File(mCurrentPhotoPath);
         Uri contentUri = Uri.fromFile(file);

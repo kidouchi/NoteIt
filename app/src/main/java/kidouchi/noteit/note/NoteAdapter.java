@@ -1,10 +1,11 @@
-package kidouchi.noteit;
+package kidouchi.noteit.note;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import kidouchi.noteit.R;
 import kidouchi.noteit.activity.NoteEditorActivity;
 import kidouchi.noteit.activity.NoteListActivity;
+import kidouchi.noteit.db.NoteItDatabase;
 
 /**
  * Created by iuy407 on 8/9/15.
@@ -21,9 +24,9 @@ import kidouchi.noteit.activity.NoteListActivity;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Note[] mNotes;
-    private NoteDatabase mDB;
+    private NoteItDatabase mDB;
 
-    public NoteAdapter(Note[] notes, Context context, NoteDatabase db) {
+    public NoteAdapter(Note[] notes, Context context, NoteItDatabase db) {
         mNotes = notes;
         mDB = db;
     }
@@ -49,7 +52,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mNoteTitleLabel;
-        private ImageView mNoteScreenshot;
+        private ImageView mNoteBitmap;
         private ImageButton mDeleteButton;
         private Note note;
         private Context context;
@@ -58,7 +61,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             super(itemView);
             context = itemView.getContext();
             mNoteTitleLabel = (TextView) itemView.findViewById(R.id.note_title_label);
-            mNoteScreenshot = (ImageView) itemView.findViewById(R.id.note_screenshot);
+            mNoteBitmap = (ImageView) itemView.findViewById(R.id.note_bitmap);
             mDeleteButton = (ImageButton) itemView.findViewById(R.id.delete_button);
 
             itemView.setOnClickListener(this);
@@ -66,17 +69,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         public void bindNote(final Note note) {
             this.note = note;
+            // Bind title
             mNoteTitleLabel.setText(note.getTitle());
 
-            byte[] bitmapArr = note.get_screenshot();
-            if (bitmapArr != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArr, 0, bitmapArr.length);
-                // TODO: Get the body text to show, must finish
-//                Matrix matrix = new Matrix();
-//                matrix.postScale(0.5f, 0.5f);
-//                Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 30, 100, 100, matrix, true);
-                mNoteScreenshot.setImageBitmap(bitmap);
-            }
+            // Bind text bitmap
+            byte[] bitArr = note.getTextBitmap();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bitArr, 0, bitArr.length);
+            mNoteBitmap.setImageBitmap(bitmap);
 
             // Setup delete button listener
             mDeleteButton.setOnClickListener(new View.OnClickListener(){
@@ -94,6 +93,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             // Start the Note Editor Activity
             Intent intent = new Intent(context, NoteEditorActivity.class);
             intent.putExtra(NoteListActivity.NOTE, note);
+            Log.d("LOOK HERE", note.getTextBitmap()+"");
             context.startActivity(intent);
         }
     }
