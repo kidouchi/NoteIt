@@ -31,7 +31,8 @@ public class NoteListFragment extends ListFragment {
     @Bind(R.id.edit_fab) FloatingActionButton mEditFabButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_note_fragment, container, false);
         ButterKnife.bind(rootView);
