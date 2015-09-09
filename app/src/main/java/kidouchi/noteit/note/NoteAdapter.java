@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import kidouchi.noteit.R;
 import kidouchi.noteit.activity.NoteEditorActivity;
-import kidouchi.noteit.activity.NoteListActivity;
-import kidouchi.noteit.db.NoteItDatabase;
+import kidouchi.noteit.fragments.NoteListFragment;
+import kidouchi.noteit.db.AppDatabase;
 
 /**
  * Created by iuy407 on 8/9/15.
@@ -23,9 +23,9 @@ import kidouchi.noteit.db.NoteItDatabase;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private Note[] mNotes;
-    private NoteItDatabase mDB;
+    private AppDatabase mDB;
 
-    public NoteAdapter(Note[] notes, Context context, NoteItDatabase db) {
+    public NoteAdapter(Note[] notes, Context context, AppDatabase db) {
         mNotes = notes;
         mDB = db;
     }
@@ -59,8 +59,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         public NoteViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
-            mNoteTitleLabel = (TextView) itemView.findViewById(R.id.note_title_label);
-            mNoteBitmap = (ImageView) itemView.findViewById(R.id.note_bitmap);
+            mNoteTitleLabel = (TextView) itemView.findViewById(R.id.note_item_title_label);
+            mNoteBitmap = (ImageView) itemView.findViewById(R.id.note_item_bitmap);
             mDeleteButton = (ImageButton) itemView.findViewById(R.id.delete_button);
 
             itemView.setOnClickListener(this);
@@ -81,8 +81,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 @Override
                 public void onClick(View v) {
                     mDB.deleteNote(note.getId());
-                    Intent intent = new Intent(context, NoteListActivity.class);
-                    context.startActivity(intent);
+                    notifyDataSetChanged();
                 }
             });
         }
@@ -91,7 +90,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         public void onClick(View v) {
             // Start the Note Editor Activity
             Intent intent = new Intent(context, NoteEditorActivity.class);
-            intent.putExtra(NoteListActivity.NOTE, note);
+            intent.putExtra(NoteListFragment.NOTE, note);
             context.startActivity(intent);
         }
     }

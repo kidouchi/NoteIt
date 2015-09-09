@@ -46,16 +46,6 @@
         android:layout_height="match_parent"
         android:gravity="bottom|right">
 
-        <!--<ImageButton-->
-            <!--android:id="@+id/camera_button"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_camera_alt_white_24dp"-->
-            <!--android:padding="10dp"-->
-            <!--android:elevation="8dp"-->
-            <!--android:background="@color/camera_button_color"-->
-            <!--android:layout_marginBottom="10dp"/>-->
-
         <ImageButton
             android:id="@+id/save_button"
             android:layout_width="wrap_content"

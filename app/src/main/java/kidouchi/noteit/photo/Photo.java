@@ -8,10 +8,14 @@ import android.os.Parcelable;
  */
 public class Photo implements Parcelable {
     private int _id;
+    private String _title;
+    private String _filepath;
     private byte[] _photo;
 
-    public Photo(int id, byte[] photo) {
+    public Photo(int id, String title, String filepath, byte[] photo) {
         this._id = id;
+        this._title = title;
+        this._filepath = filepath;
         this._photo = photo;
     }
 
@@ -21,6 +25,22 @@ public class Photo implements Parcelable {
 
     public void setId(int _id) {
         this._id = _id;
+    }
+
+    public String getTitle() {
+        return _title;
+    }
+
+    public void setTitle(String _title) {
+        this._title = _title;
+    }
+
+    public String getFilepath() {
+        return _filepath;
+    }
+
+    public void setFilepath(String _filepath) {
+        this._filepath = _filepath;
     }
 
     public byte[] getPhoto() {
@@ -39,11 +59,13 @@ public class Photo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(_id);
+        dest.writeInt(_photo.length);
         dest.writeByteArray(_photo);
     }
 
     private Photo(Parcel in) {
         _id = in.readInt();
+        _photo = new byte[in.readInt()];
         in.readByteArray(_photo);
     }
 

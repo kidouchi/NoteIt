@@ -15,7 +15,7 @@ import kidouchi.noteit.photo.Photo;
 /**
  * Created by iuy407 on 8/13/15.
  */
-public class NoteItDatabase extends SQLiteOpenHelper {
+public class AppDatabase extends SQLiteOpenHelper {
 
     /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
 
@@ -30,11 +30,13 @@ public class NoteItDatabase extends SQLiteOpenHelper {
 
     public static final String TABLE_PHOTOS = "table_photos";
     public static final String COLUMN_PHOTO_ID = "_id";
-    public static final String COLUMN_PHOTO = "photo";
+    public static final String COLUMN_PHOTO_TITLE = "title";
+    public static final String COLUMN_PHOTO_FILEPATH = "filepath";
+    public static final String COLUMN_PHOTO_BITMAP = "photo";
 
     private SQLiteDatabase noteDB = null;
 
-    public NoteItDatabase(Context context) {
+    public AppDatabase(Context context) {
         super(context, DB_NAME, null, DB_VER);
     }
 
@@ -51,7 +53,9 @@ public class NoteItDatabase extends SQLiteOpenHelper {
         // Create PHOTO Table
         String createPhotosTable = "CREATE TABLE " + TABLE_PHOTOS + " (" +
                 COLUMN_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_PHOTO + "BLOB)";
+                COLUMN_PHOTO_TITLE + " TEXT, " +
+                COLUMN_PHOTO_FILEPATH + " TEXT, " +
+                COLUMN_PHOTO_BITMAP + "BLOB)";
         db.execSQL(createPhotosTable);
      }
 
@@ -99,13 +103,17 @@ public class NoteItDatabase extends SQLiteOpenHelper {
     public Photo createNewPhoto(byte[] photo) {
         noteDB.beginTransaction();
 
+        String newTitle = "Untitled";
+        String newFilepath = "";
+        byte[] bitmap = null;
+
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_PHOTO, photo);
+            values.put(COLUMN_PHOTO_BITMAP, photo);
             int rowId = (int) noteDB.insert(TABLE_PHOTOS, null, values);
 
             noteDB.setTransactionSuccessful();
-            return new Photo(rowId, photo);
+            return new Photo(rowId, newTitle, newFilepath, photo);
         } finally {
             noteDB.endTransaction();
         }
@@ -168,6 +176,35 @@ public class NoteItDatabase extends SQLiteOpenHelper {
         return notes;
     }
 
+    public ArrayList<Photo> getAllPhotos() {
+        ArrayList<Photo> photos = new ArrayList<Photo>();
+
+        // Get all photos in database
+        Cursor cursor = noteDB.query(
+                TABLE_PHOTOS, null, null, null, null, null, null
+        );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int colId = cursor.getColumnIndex(COLUMN_PHOTO_ID);
+            int rowId = cursor.getInt(colId);
+
+            int colTitle = cursor.getColumnIndex(COLUMN_PHOTO_TITLE);
+            String photoTitle = cursor.getString(colTitle);
+
+            int colFilepath = cursor.getColumnIndex(COLUMN_PHOTO_FILEPATH);
+            String photoFilepath = cursor.getString(colFilepath);
+
+            int colPhotoBitmap = cursor.getColumnIndex(COLUMN_PHOTO_BITMAP);
+            byte[] photoBitmap = cursor.getBlob(colPhotoBitmap);
+
+            photos.add(new Photo(rowId, photoTitle, photoFilepath, photoBitmap));
+            cursor.moveToNext();
+        }
+
+        return photos;
+    }
+
     public void updateNoteTitle(int id, String newTitle) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, newTitle);
@@ -175,7 +212,7 @@ public class NoteItDatabase extends SQLiteOpenHelper {
                 TABLE_NOTES,
                 values,
                 COLUMN_NOTE_ID + " = ?",
-                new String[] { id+"" }
+                new String[]{ id + "" }
         );
     }
 
@@ -186,7 +223,7 @@ public class NoteItDatabase extends SQLiteOpenHelper {
                 TABLE_NOTES,
                 values,
                 COLUMN_NOTE_ID + " = ?",
-                new String[] { id+"" }
+                new String[]{ id + "" }
         );
     }
 
@@ -197,7 +234,7 @@ public class NoteItDatabase extends SQLiteOpenHelper {
                 TABLE_NOTES,
                 values,
                 COLUMN_NOTE_ID + "= ?",
-                new String[] { id+"" }
+                new String[]{ id + "" }
         );
     }
 
@@ -205,7 +242,16 @@ public class NoteItDatabase extends SQLiteOpenHelper {
         noteDB.delete(
                 TABLE_NOTES,
                 COLUMN_NOTE_ID + " = ?",
+                new String[]{id + ""}
+        );
+    }
+
+    public void deletePhoto(int id) {
+        noteDB.delete(
+                TABLE_PHOTOS,
+                COLUMN_PHOTO_ID + " = ?",
                 new String[] { id+"" }
+
         );
     }
 

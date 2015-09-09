@@ -14,13 +14,14 @@ import java.sql.SQLException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import kidouchi.noteit.R;
-import kidouchi.noteit.db.NoteItDatabase;
+import kidouchi.noteit.db.AppDatabase;
+import kidouchi.noteit.fragments.NoteListFragment;
 import kidouchi.noteit.note.Note;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
     public static final String PHOTO_PATH = "";
-    private NoteItDatabase mDB;
+    private AppDatabase mDB;
 
     @Bind(R.id.edit_text) EditText mEditText;
     @Bind(R.id.edit_title) EditText mEditTitle;
@@ -33,7 +34,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note_editor);
         ButterKnife.bind(this);
 
-        mDB = new NoteItDatabase(this);
+        mDB = new AppDatabase(this);
         try {
             mDB.open();
         } catch (SQLException e) {
@@ -42,8 +43,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final Note note;
-        if (intent.getParcelableExtra(NoteListActivity.NOTE) != null) {
-            note = intent.getParcelableExtra(NoteListActivity.NOTE);
+        if (intent.getParcelableExtra(NoteListFragment.NOTE) != null) {
+            note = intent.getParcelableExtra(NoteListFragment.NOTE);
             mEditText.setText(note.getText().toString());
             mEditTitle.setText(note.getTitle().toString());
         } else {
@@ -74,7 +75,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 // Update bitmap
                 mDB.updateNoteBitmap(note.getId(), bitmapArr);
 
-                Intent intent = new Intent(NoteEditorActivity.this, NoteListActivity.class);
+                Intent intent = new Intent(NoteEditorActivity.this, NoteListFragment.class);
                 startActivity(intent);
             }
         });
