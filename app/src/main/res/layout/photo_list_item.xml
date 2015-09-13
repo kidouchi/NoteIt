@@ -19,8 +19,7 @@
             android:id="@+id/photo_item_bitmap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitStart"
-            android:background="@color/editor_background" />
+            android:scaleType="fitStart" />
 
         <ImageButton
             android:layout_width="wrap_content"

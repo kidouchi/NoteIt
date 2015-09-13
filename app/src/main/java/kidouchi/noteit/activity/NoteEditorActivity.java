@@ -1,9 +1,9 @@
 package kidouchi.noteit.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,7 +18,7 @@ import kidouchi.noteit.db.AppDatabase;
 import kidouchi.noteit.fragments.NoteListFragment;
 import kidouchi.noteit.note.Note;
 
-public class NoteEditorActivity extends AppCompatActivity {
+public class NoteEditorActivity extends Activity {
 
     public static final String PHOTO_PATH = "";
     private AppDatabase mDB;
@@ -75,57 +75,27 @@ public class NoteEditorActivity extends AppCompatActivity {
                 // Update bitmap
                 mDB.updateNoteBitmap(note.getId(), bitmapArr);
 
-                Intent intent = new Intent(NoteEditorActivity.this, NoteListFragment.class);
+                Intent intent = new Intent(NoteEditorActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
-
-        // Action for when CAMERA button is pressed
-//        mCameraButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CameraUtilities camera = new CameraUtilities(NoteEditorActivity.this);
-//                camera.dispatchTakePictureIntent();
-//                camera.galleryAddPic();
-//            }
-//        });
-
     }
 
 //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        // Check the request was successful
-//        if (requestCode == CameraUtilities.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-//            String photoPathName = CameraUtilities.mCurrentPhotoPath;
-//            Bitmap imageBitmap = BitmapFactory.decodeFile(photoPathName);
-//            int cursor = mEditText.getSelectionStart();
-//            SpannableStringBuilder builder = new SpannableStringBuilder(mEditText.getText());
-//            ImageSpan imageSpan = new ImageSpan(NoteEditorActivity.this, imageBitmap,
-//                    ImageSpan.ALIGN_BASELINE);
-//            builder.setSpan(imageSpan, cursor-10, cursor, SpannableStringBuilder.SPAN_INCLUSIVE_EXCLUSIVE);
-//            mEditText.setText(builder);
-//            mEditText.setSelection(cursor);
-//            camera.galleryAddPic();
-//            Toast.makeText(
-//                    NoteEditorActivity.this,
-//                    "Your picture was saved in your gallery",
-//                    Toast.LENGTH_LONG).show();
+//    protected void onResume() {
+//        super.onResume();
+//        try {
+//            mDB.open();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
 //        }
 //    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            mDB.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDB.close();
-    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mDB.close();
+//    }
 }

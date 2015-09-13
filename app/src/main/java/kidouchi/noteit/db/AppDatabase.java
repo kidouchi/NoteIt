@@ -20,7 +20,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
 
     private static final String DB_NAME = "noteDB.db";
-    private static final int DB_VER = 6;
+    private static final int DB_VER = 7;
 
     public static final String TABLE_NOTES = "table_notes";
     public static final String COLUMN_NOTE_ID = "_id";
@@ -51,11 +51,14 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL(createNotesTable);
 
         // Create PHOTO Table
+//        String createPhotosTable = "CREATE TABLE " + TABLE_PHOTOS + " (" +
+//                COLUMN_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                COLUMN_PHOTO_TITLE + " TEXT, " +
+//                COLUMN_PHOTO_FILEPATH + " TEXT, " +
+//                COLUMN_PHOTO_BITMAP + "BLOB)";
         String createPhotosTable = "CREATE TABLE " + TABLE_PHOTOS + " (" +
                 COLUMN_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_PHOTO_TITLE + " TEXT, " +
-                COLUMN_PHOTO_FILEPATH + " TEXT, " +
-                COLUMN_PHOTO_BITMAP + "BLOB)";
+                COLUMN_PHOTO_FILEPATH + " TEXT)";
         db.execSQL(createPhotosTable);
      }
 
@@ -100,52 +103,53 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public Photo createNewPhoto(byte[] photo) {
+    public Photo createNewPhoto(String filepath) {
         noteDB.beginTransaction();
 
-        String newTitle = "Untitled";
-        String newFilepath = "";
-        byte[] bitmap = null;
+//        String newTitle = "Untitled";
+//        String newFilepath = filepath;
+//        byte[] bitmap = null;
 
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_PHOTO_BITMAP, photo);
+//            values.put(COLUMN_PHOTO_BITMAP, photo);
+            values.put(COLUMN_PHOTO_FILEPATH, filepath);
             int rowId = (int) noteDB.insert(TABLE_PHOTOS, null, values);
 
             noteDB.setTransactionSuccessful();
-            return new Photo(rowId, newTitle, newFilepath, photo);
+            return new Photo(rowId, filepath);
         } finally {
             noteDB.endTransaction();
         }
     }
 
-    public Note getNote(int id) {
-        Cursor cursor = noteDB.query(
-                TABLE_NOTES,
-                new String[] { COLUMN_NOTE_ID },
-                null,
-                new String [] { id+"" },
-                null,
-                null,
-                null
-        );
-
-        if (cursor.moveToFirst()) {
-            // Find note title
-            int colTitleNum = cursor.getColumnIndex(COLUMN_TITLE);
-            String title = cursor.getString(colTitleNum);
-            // Find note text
-            int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
-            String text = cursor.getString(colTextNum);
-            // Find note screenshot
-            int colTextBitmapNum = cursor.getColumnIndex(COLUMN_TEXT_BITMAP);
-            byte[] textBitmap = cursor.getBlob(colTextBitmapNum);
-
-            return new Note(id, title, text, textBitmap);
-        }
-
-        return null;
-    }
+//    public Note getNote(int id) {
+//        Cursor cursor = noteDB.query(
+//                TABLE_NOTES,
+//                new String[] { COLUMN_NOTE_ID },
+//                null,
+//                new String [] { id+"" },
+//                null,
+//                null,
+//                null
+//        );
+//
+//        if (cursor.moveToFirst()) {
+//            // Find note title
+//            int colTitleNum = cursor.getColumnIndex(COLUMN_TITLE);
+//            String title = cursor.getString(colTitleNum);
+//            // Find note text
+//            int colTextNum = cursor.getColumnIndex(COLUMN_TEXT);
+//            String text = cursor.getString(colTextNum);
+//            // Find note screenshot
+//            int colTextBitmapNum = cursor.getColumnIndex(COLUMN_TEXT_BITMAP);
+//            byte[] textBitmap = cursor.getBlob(colTextBitmapNum);
+//
+//            return new Note(id, title, text, textBitmap);
+//        }
+//
+//        return null;
+//    }
 
     public ArrayList<Note> getAllNotes() {
         ArrayList<Note> notes = new ArrayList<Note>();
@@ -189,16 +193,16 @@ public class AppDatabase extends SQLiteOpenHelper {
             int colId = cursor.getColumnIndex(COLUMN_PHOTO_ID);
             int rowId = cursor.getInt(colId);
 
-            int colTitle = cursor.getColumnIndex(COLUMN_PHOTO_TITLE);
-            String photoTitle = cursor.getString(colTitle);
+//            int colTitle = cursor.getColumnIndex(COLUMN_PHOTO_TITLE);
+//            String photoTitle = cursor.getString(colTitle);
 
             int colFilepath = cursor.getColumnIndex(COLUMN_PHOTO_FILEPATH);
             String photoFilepath = cursor.getString(colFilepath);
 
-            int colPhotoBitmap = cursor.getColumnIndex(COLUMN_PHOTO_BITMAP);
-            byte[] photoBitmap = cursor.getBlob(colPhotoBitmap);
+//            int colPhotoBitmap = cursor.getColumnIndex(COLUMN_PHOTO_BITMAP);
+//            byte[] photoBitmap = cursor.getBlob(colPhotoBitmap);
 
-            photos.add(new Photo(rowId, photoTitle, photoFilepath, photoBitmap));
+            photos.add(new Photo(rowId, photoFilepath));
             cursor.moveToNext();
         }
 

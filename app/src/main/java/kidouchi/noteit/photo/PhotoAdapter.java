@@ -2,8 +2,6 @@ package kidouchi.noteit.photo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import kidouchi.noteit.R;
 import kidouchi.noteit.activity.PhotoViewerActivity;
 import kidouchi.noteit.db.AppDatabase;
 import kidouchi.noteit.fragments.PhotoListFragment;
+import kidouchi.noteit.utilities.BitmapUtilities;
 
 /**
  * Created by iuy407 on 8/26/15.
  */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
 
-    private Photo[] mPhotos;
+    private ArrayList<Photo> mPhotos;
     private AppDatabase mDB;
 
     public PhotoAdapter(Photo[] photos, Context context, AppDatabase db) {
-        this.mPhotos = photos;
+        this.mPhotos = new ArrayList<Photo>(Arrays.asList(photos));
         this.mDB = db;
     }
 
@@ -38,12 +40,16 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        holder.bindPhoto(mPhotos[position]);
+        holder.bindPhoto(mPhotos.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mPhotos.length;
+        return mPhotos.size();
+    }
+
+    public void addPhoto(Photo photo) {
+        mPhotos.add(photo);
     }
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,9 +77,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 //            mPhotoTitleLabel.setText(photo.getTitle());
 
             // Bind photo bitmap
-            byte[] bitArr = photo.getPhoto();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bitArr, 0, bitArr.length);
-            mPhotoBitmap.setImageBitmap(bitmap);
+//            byte[] bitArr = photo.getPhoto();
+            mPhotoBitmap.setImageBitmap(
+                    BitmapUtilities.decodeSampledBitmapFromFile(photo.getFilepath(), 300, 200));
 
             // Bind delete button and listener
             mDeleteButton.setOnClickListener(new View.OnClickListener(){
@@ -90,6 +96,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         public void onClick(View v) {
             // Open Photo Viewer
             Intent intent = new Intent(context, PhotoViewerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(PhotoListFragment.PHOTO, photo);
             context.startActivity(intent);
         }

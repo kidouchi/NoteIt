@@ -5,10 +5,19 @@
                 android:layout_height="match_parent"
                 tools:context=".MainActivity$PlaceholderFragment"
                 android:clickable="false"
+                android:animateLayoutChanges="true"
                 android:background="@color/note_list_bg_color">
 
+    <!--<TextView-->
+        <!--android:id="@android:id/empty"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="18dp"-->
+        <!--android:text="@string/note_list_empty_msg" />-->
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/noteList"
+        android:id="@+id/note_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"

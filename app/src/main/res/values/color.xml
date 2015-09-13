@@ -2,8 +2,7 @@
 <resources>
     <color name="transparent_black">#80000000</color>
 
-    <color name="editor_background">#FFECB3</color>
-    <color name="editor_title_background">#FFE082</color>
+    <color name="editor_title_background">#CFD8DC</color>
 
     <color name="edit_button_color">#7986CB</color>
     <color name="note_list_bg_color">#BBDEFB</color>
@@ -14,4 +13,7 @@
     <color name="camera_button_color">#FF7043</color>
 
     <color name="photo_viewer_bg">#212121</color>
+
+    <color name="notes_tab_color">#42A5F5</color>
+    <color name="photos_tab_color">#FF5722</color>
 </resources>
