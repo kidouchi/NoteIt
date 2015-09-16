@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +57,8 @@ public class NoteListFragment extends Fragment {
         mNoteRecyclerView.setAdapter(adapter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        Log.d("TEST", layoutManager + "");
         mNoteRecyclerView.setLayoutManager(layoutManager);
         mNoteRecyclerView.setHasFixedSize(false);
-
 
         // Setup the Note Edit Button
         mEditFabButton.setOnClickListener(new View.OnClickListener() {

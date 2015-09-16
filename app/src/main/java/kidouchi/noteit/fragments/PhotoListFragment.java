@@ -95,7 +95,6 @@ public class PhotoListFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPhotoRecyclerView.setLayoutManager(layoutManager);
-
         mPhotoRecyclerView.setHasFixedSize(false);
     }
 
@@ -122,13 +121,14 @@ public class PhotoListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Check the request was successful
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
-            Photo newPhoto = mDB.createNewPhoto("file:" + mPhotoFile.getAbsolutePath());
+//            Photo newPhoto = mDB.createNewPhoto("file:" + mPhotoFile.getAbsolutePath());
+            Photo newPhoto = mDB.createNewPhoto(mPhotoFile.getAbsolutePath());
             mAdapter.addPhoto(newPhoto);
             mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRangeInserted(0, mAdapter.getItemCount());
+            mAdapter.notifyDataSetChanged();
             Toast.makeText(
                     getActivity(),
                     "Your picture was also saved in your gallery",
@@ -151,12 +151,12 @@ public class PhotoListFragment extends Fragment {
         return image;
     }
 
-    public void galleryAddPic(String filepath) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File file = new File(filepath);
-        Uri contentUri = Uri.fromFile(file);
-        intent.setData(contentUri);
-        getActivity().sendBroadcast(intent);
-    }
+//    public void galleryAddPic(String filepath) {
+//        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File file = new File(filepath);
+//        Uri contentUri = Uri.fromFile(file);
+//        intent.setData(contentUri);
+//        getActivity().sendBroadcast(intent);
+//    }
 
 }

@@ -20,7 +20,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
 
     private static final String DB_NAME = "noteDB.db";
-    private static final int DB_VER = 7;
+    private static final int DB_VER = 8;
 
     public static final String TABLE_NOTES = "table_notes";
     public static final String COLUMN_NOTE_ID = "_id";
@@ -254,8 +254,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         noteDB.delete(
                 TABLE_PHOTOS,
                 COLUMN_PHOTO_ID + " = ?",
-                new String[] { id+"" }
-
+                new String[]{ id+"" }
         );
     }
 

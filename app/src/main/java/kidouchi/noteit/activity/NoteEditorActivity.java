@@ -83,7 +83,7 @@ public class NoteEditorActivity extends Activity {
         });
     }
 
-//    @Override
+    //    @Override
 //    protected void onResume() {
 //        super.onResume();
 //        try {

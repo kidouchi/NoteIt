@@ -40,7 +40,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        holder.bindPhoto(mPhotos.get(position));
+        holder.bindPhoto(mPhotos.get(position), position);
     }
 
     @Override
@@ -65,12 +65,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             context = itemView.getContext();
 //            mPhotoTitleLabel = (TextView) itemView.findViewById(R.id.list_item_title_label);
             mPhotoBitmap = (ImageView) itemView.findViewById(R.id.photo_item_bitmap);
-            mDeleteButton = (ImageButton) itemView.findViewById(R.id.delete_button);
+            mDeleteButton = (ImageButton) itemView.findViewById(R.id.photo_delete_button);
 
             itemView.setOnClickListener(this);
         }
 
-        public void bindPhoto(final Photo photo) {
+        public void bindPhoto(final Photo photo, final int position) {
             this.photo = photo;
 
             // Bind title
@@ -86,8 +86,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                 @Override
                 public void onClick(View v) {
                     mDB.deletePhoto(photo.getId());
-                    Intent intent = new Intent(context, PhotoListFragment.class);
-                    context.startActivity(intent);
+                    mPhotos.remove(position);
+                    PhotoAdapter.this.notifyItemRemoved(position);
+                    PhotoAdapter.this.notifyItemRangeChanged(0, mPhotos.size());
                 }
             });
         }

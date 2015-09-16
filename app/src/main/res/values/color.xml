@@ -16,4 +16,13 @@
 
     <color name="notes_tab_color">#42A5F5</color>
     <color name="photos_tab_color">#FF5722</color>
+
+    <!-- Button Colors -->
+    <color name="trash_button_color">#FF1744</color>
+    <color name="twitter_button_color">#55ACEE</color>
+    <color name="tumblr_button_color">#35465c</color>
+    <color name="twitch_button_color">#6441A5</color>
+    <color name="share_button_color">#689F38</color>
+
+
 </resources>
