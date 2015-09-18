@@ -9,13 +9,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 import kidouchi.noteit.R;
 import kidouchi.noteit.fragments.NoteListFragment;
 import kidouchi.noteit.fragments.PhotoListFragment;
 
 public class MainActivity extends FragmentActivity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "3N6v5WACB2ve8oUYi50ZpFzKt";
+    private static final String TWITTER_SECRET = "xDV0VX1SpnglmD1i7MTsB4r9LVOrwOiiXGH8dBEGgdBrLBlW52";
+
 
     private NoteListFragment mNoteListFragment;
     private PhotoListFragment mPhotoListFragment;
@@ -33,6 +42,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
