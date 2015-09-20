@@ -18,13 +18,9 @@ import io.fabric.sdk.android.Fabric;
 import kidouchi.noteit.R;
 import kidouchi.noteit.fragments.NoteListFragment;
 import kidouchi.noteit.fragments.PhotoListFragment;
+import kidouchi.noteit.twitter.TwitterApi;
 
 public class MainActivity extends FragmentActivity {
-
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "3N6v5WACB2ve8oUYi50ZpFzKt";
-    private static final String TWITTER_SECRET = "xDV0VX1SpnglmD1i7MTsB4r9LVOrwOiiXGH8dBEGgdBrLBlW52";
-
 
     private NoteListFragment mNoteListFragment;
     private PhotoListFragment mPhotoListFragment;
@@ -37,12 +33,14 @@ public class MainActivity extends FragmentActivity {
     private ListSectionsPagerAdapter mListSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-    @Bind(R.id.pager_tab_strip) PagerTabStrip mPagerTabStrip;
+    @Bind(R.id.pager_tab_strip)
+    PagerTabStrip mPagerTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        TwitterAuthConfig authConfig =
+                new TwitterAuthConfig(TwitterApi.TWITTER_KEY, TwitterApi.TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -54,28 +52,28 @@ public class MainActivity extends FragmentActivity {
 
         mViewPager.addOnPageChangeListener(
                 new ViewPager.OnPageChangeListener() {
-                   @Override
-                   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                   }
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    }
 
-                   @Override
-                   public void onPageSelected(int position) {
-                       switch (position) {
-                           case NOTE_TAB_INT:
-                               mPagerTabStrip.setBackgroundColor(getResources()
-                                       .getColor(R.color.notes_tab_color));
-                               break;
-                           case PHOTO_TAB_INT:
-                               mPagerTabStrip.setBackgroundColor(getResources()
-                                       .getColor(R.color.photos_tab_color));
-                               break;
-                       }
-                   }
+                    @Override
+                    public void onPageSelected(int position) {
+                        switch (position) {
+                            case NOTE_TAB_INT:
+                                mPagerTabStrip.setBackgroundColor(getResources()
+                                        .getColor(R.color.notes_tab_color));
+                                break;
+                            case PHOTO_TAB_INT:
+                                mPagerTabStrip.setBackgroundColor(getResources()
+                                        .getColor(R.color.photos_tab_color));
+                                break;
+                        }
+                    }
 
-                   @Override
-                   public void onPageScrollStateChanged(int state) {
-                   }
-               }
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                    }
+                }
         );
 
         mNoteListFragment = new NoteListFragment();
@@ -100,7 +98,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch(position) {
+            switch (position) {
                 case NOTE_TAB_INT:
                     return mNoteListFragment;
                 case PHOTO_TAB_INT:
@@ -116,7 +114,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch(position) {
+            switch (position) {
                 case NOTE_TAB_INT:
                     return "NOTES";
                 case PHOTO_TAB_INT:
