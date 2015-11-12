@@ -21,7 +21,7 @@ import kidouchi.noteit.note.Note;
 public class NoteEditorActivity extends Activity {
 
     public static final String PHOTO_PATH = "";
-    private AppDatabase mDB;
+    private AppDatabase mDB = AppDatabase.getInstance(this);
 
     @Bind(R.id.edit_text) EditText mEditText;
     @Bind(R.id.edit_title) EditText mEditTitle;
@@ -34,7 +34,6 @@ public class NoteEditorActivity extends Activity {
         setContentView(R.layout.activity_note_editor);
         ButterKnife.bind(this);
 
-        mDB = new AppDatabase(this);
         try {
             mDB.open();
         } catch (SQLException e) {
@@ -83,19 +82,19 @@ public class NoteEditorActivity extends Activity {
         });
     }
 
-    //    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        try {
-//            mDB.open();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        mDB.close();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mDB.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDB.close();
+    }
 }

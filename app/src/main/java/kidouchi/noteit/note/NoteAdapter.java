@@ -2,6 +2,8 @@ package kidouchi.noteit.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.plus.PlusShare;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
@@ -22,9 +25,10 @@ import io.fabric.sdk.android.Fabric;
 import kidouchi.noteit.R;
 import kidouchi.noteit.activity.NoteEditorActivity;
 import kidouchi.noteit.animation.RollInOutAnimation;
+import kidouchi.noteit.api.TwitterApi;
 import kidouchi.noteit.db.AppDatabase;
 import kidouchi.noteit.fragments.NoteListFragment;
-import kidouchi.noteit.twitter.TwitterApi;
+import kidouchi.noteit.fragments.TumblrPostDialogFragment;
 import kidouchi.noteit.utilities.BitmapUtilities;
 
 /**
@@ -110,6 +114,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                     mNotes.remove(position);
                     NoteAdapter.this.notifyItemRemoved(position);
                     NoteAdapter.this.notifyItemRangeChanged(0, mNotes.size());
+                    NoteAdapter.this.notifyDataSetChanged();
                 }
             });
 
@@ -134,10 +139,32 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             mTwitterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mAdapterContext, "twitter btn pressed", Toast.LENGTH_LONG).show();
                     TweetComposer.Builder builder = new TweetComposer.Builder(mAdapterContext)
                             .text(note.getText());
                     builder.show();
+                }
+            });
+
+            mTumblrButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TumblrPostDialogFragment tumblrPostFrag =
+                            TumblrPostDialogFragment.newInstance(note);
+                    tumblrPostFrag.show(((FragmentActivity) context).getSupportFragmentManager(),
+                            "TumblrPostDialogFragment");
+                }
+            });
+
+            mGooglePlusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mAdapterContext, "g+ pressed", Toast.LENGTH_LONG).show();
+                    Intent shareIntent = new PlusShare.Builder(mAdapterContext)
+                            .setType("text/plain")
+                            .setText(note.getText())
+                            .setContentUrl(Uri.parse("https://developers.google.com/+/"))
+                            .getIntent();
+                    mAdapterContext.startActivity(shareIntent);
                 }
             });
 

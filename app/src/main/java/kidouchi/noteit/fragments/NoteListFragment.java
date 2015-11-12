@@ -2,6 +2,7 @@ package kidouchi.noteit.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,10 +26,31 @@ public class NoteListFragment extends Fragment {
 
     public static final String NOTE = "NOTE";
     private Note[] mNotes;
-    private AppDatabase mDB;
+    private AppDatabase mDB = AppDatabase.getInstance(getActivity());
+    private NoteAdapter adapter;
+    private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            updateViewOnEmpty();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            super.onItemRangeInserted(positionStart, itemCount);
+            updateViewOnEmpty();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            super.onItemRangeRemoved(positionStart, itemCount);
+            updateViewOnEmpty();
+        }
+    };
 
     @Bind(R.id.note_recycler_view) RecyclerView mNoteRecyclerView;
     @Bind(R.id.edit_fab) FloatingActionButton mEditFabButton;
+    @Bind(R.id.empty_note_view) TextView mEmptyView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,18 +65,18 @@ public class NoteListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDB = new AppDatabase(getActivity());
-        try {
-            mDB.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Parcelable[] parcels = getArguments().getParcelableArray("NoteArray");
+        mNotes = new Note[parcels.length];
+        for (int i = 0; i < mNotes.length; i++) {
+            mNotes[i] = (Note)parcels[i];
         }
-
         // Setup the Note List Layout
-        ArrayList<Note> dbNotes = mDB.getAllNotes();
-        mNotes = dbNotes.toArray(new Note[dbNotes.size()]);
-        NoteAdapter adapter = new NoteAdapter(mNotes, getActivity(), mDB);
+        adapter = new NoteAdapter(mNotes, getActivity(), mDB);
         mNoteRecyclerView.setAdapter(adapter);
+
+        // Update view when empty or not
+        adapter.registerAdapterDataObserver(observer);
+        adapter.notifyDataSetChanged();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mNoteRecyclerView.setLayoutManager(layoutManager);
@@ -70,7 +92,30 @@ public class NoteListFragment extends Fragment {
         });
     }
 
-    public void closeDatabase() {
+    private void updateViewOnEmpty() {
+        if (adapter.getItemCount() == 0) {
+            mNoteRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mNoteRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            mDB.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
         mDB.close();
+        adapter.unregisterAdapterDataObserver(observer);
     }
 }

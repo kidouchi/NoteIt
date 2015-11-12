@@ -8,13 +8,13 @@
                 android:animateLayoutChanges="true"
                 android:background="@color/note_list_bg_color">
 
-    <!--<TextView-->
-        <!--android:id="@android:id/empty"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="center"-->
-        <!--android:padding="18dp"-->
-        <!--android:text="@string/note_list_empty_msg" />-->
+    <TextView
+        android:id="@+id/empty_note_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="18dp"
+        android:text="@string/note_list_empty_msg" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/note_recycler_view"

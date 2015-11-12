@@ -18,6 +18,9 @@ import kidouchi.noteit.photo.Photo;
 public class AppDatabase extends SQLiteOpenHelper {
 
     /// Filepath to emulator sqlite3 file: data/data/kidouchi.noteit/databases/noteDB.db
+    private static AppDatabase mInstance = null;
+
+    private Context mContext;
 
     private static final String DB_NAME = "noteDB.db";
     private static final int DB_VER = 8;
@@ -30,14 +33,20 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     public static final String TABLE_PHOTOS = "table_photos";
     public static final String COLUMN_PHOTO_ID = "_id";
-    public static final String COLUMN_PHOTO_TITLE = "title";
     public static final String COLUMN_PHOTO_FILEPATH = "filepath";
-    public static final String COLUMN_PHOTO_BITMAP = "photo";
 
     private SQLiteDatabase noteDB = null;
 
-    public AppDatabase(Context context) {
+    public static AppDatabase getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new AppDatabase(context);
+        }
+        return mInstance;
+    }
+
+    private AppDatabase(Context context) {
         super(context, DB_NAME, null, DB_VER);
+        this.mContext = context;
     }
 
     @Override
@@ -51,11 +60,6 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL(createNotesTable);
 
         // Create PHOTO Table
-//        String createPhotosTable = "CREATE TABLE " + TABLE_PHOTOS + " (" +
-//                COLUMN_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                COLUMN_PHOTO_TITLE + " TEXT, " +
-//                COLUMN_PHOTO_FILEPATH + " TEXT, " +
-//                COLUMN_PHOTO_BITMAP + "BLOB)";
         String createPhotosTable = "CREATE TABLE " + TABLE_PHOTOS + " (" +
                 COLUMN_PHOTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PHOTO_FILEPATH + " TEXT)";
@@ -106,13 +110,8 @@ public class AppDatabase extends SQLiteOpenHelper {
     public Photo createNewPhoto(String filepath) {
         noteDB.beginTransaction();
 
-//        String newTitle = "Untitled";
-//        String newFilepath = filepath;
-//        byte[] bitmap = null;
-
         try {
             ContentValues values = new ContentValues();
-//            values.put(COLUMN_PHOTO_BITMAP, photo);
             values.put(COLUMN_PHOTO_FILEPATH, filepath);
             int rowId = (int) noteDB.insert(TABLE_PHOTOS, null, values);
 
@@ -193,14 +192,8 @@ public class AppDatabase extends SQLiteOpenHelper {
             int colId = cursor.getColumnIndex(COLUMN_PHOTO_ID);
             int rowId = cursor.getInt(colId);
 
-//            int colTitle = cursor.getColumnIndex(COLUMN_PHOTO_TITLE);
-//            String photoTitle = cursor.getString(colTitle);
-
             int colFilepath = cursor.getColumnIndex(COLUMN_PHOTO_FILEPATH);
             String photoFilepath = cursor.getString(colFilepath);
-
-//            int colPhotoBitmap = cursor.getColumnIndex(COLUMN_PHOTO_BITMAP);
-//            byte[] photoBitmap = cursor.getBlob(colPhotoBitmap);
 
             photos.add(new Photo(rowId, photoFilepath));
             cursor.moveToNext();

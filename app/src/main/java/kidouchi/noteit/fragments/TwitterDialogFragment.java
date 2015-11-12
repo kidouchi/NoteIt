@@ -6,7 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import kidouchi.noteit.R;
 
@@ -15,7 +23,7 @@ import kidouchi.noteit.R;
  */
 public class TwitterDialogFragment extends android.support.v4.app.DialogFragment {
 
-//    @Bind(R.id.twitter_login_button) TwitterLoginButton mTwitterLoginBtn;
+    @Bind(R.id.twitter_login_button) TwitterLoginButton mTwitterLoginBtn;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -23,8 +31,7 @@ public class TwitterDialogFragment extends android.support.v4.app.DialogFragment
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate the Twitter dialog
-
-        builder.setView(inflater.inflate(R.layout.twitter_sigin_dialog, null))
+        builder.setView(inflater.inflate(R.layout.twitter_signin_dialog, null))
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -36,20 +43,20 @@ public class TwitterDialogFragment extends android.support.v4.app.DialogFragment
         // Bind twitter login button to dialog
         ButterKnife.bind(dialog);
 
-//        mTwitterLoginBtn.setCallback(new Callback<TwitterSession>() {
-//            @Override
-//            public void success(Result<TwitterSession> result) {
-//
-//            }
-//
-//            @Override
-//            public void failure(TwitterException e) {
-//                Toast.makeText(
-//                        getActivity(),
-//                        e.getMessage() + "Please try again",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        });
+        mTwitterLoginBtn.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+                Toast.makeText(
+                        getActivity(),
+                        e.getMessage() + "Please try again",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
         return dialog;
     }

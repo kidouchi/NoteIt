@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.Bind;
@@ -40,9 +40,8 @@ public class PhotoListFragment extends Fragment {
 
     private File mPhotoFile;
     private PhotoAdapter mAdapter;
-
+    private AppDatabase mDB = AppDatabase.getInstance(getActivity());
     private Photo[] mPhotos;
-    private AppDatabase mDB;
 
     @Bind(R.id.photo_recycler_view) RecyclerView mPhotoRecyclerView;
     @Bind(R.id.camera_fab_button) FloatingActionButton mCameraButton;
@@ -81,15 +80,12 @@ public class PhotoListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDB = new AppDatabase(getActivity());
-        try {
-            mDB.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Parcelable[] parcels = getArguments().getParcelableArray("PhotoArray");
+        mPhotos = new Photo[parcels.length];
+        for (int i = 0; i < mPhotos.length; i++) {
+            mPhotos[i] = (Photo)parcels[i];
         }
 
-        ArrayList<Photo> photos = mDB.getAllPhotos();
-        mPhotos = photos.toArray(new Photo[photos.size()]);
         mAdapter = new PhotoAdapter(mPhotos, getActivity(), mDB);
         mPhotoRecyclerView.setAdapter(mAdapter);
 
@@ -151,7 +147,7 @@ public class PhotoListFragment extends Fragment {
         return image;
     }
 
-//    public void galleryAddPic(String filepath) {
+    //    public void galleryAddPic(String filepath) {
 //        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 //        File file = new File(filepath);
 //        Uri contentUri = Uri.fromFile(file);
@@ -159,4 +155,20 @@ public class PhotoListFragment extends Fragment {
 //        getActivity().sendBroadcast(intent);
 //    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            mDB.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDB.close();
+    }
 }

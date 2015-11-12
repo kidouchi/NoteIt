@@ -24,5 +24,9 @@
     <color name="twitch_button_color">#6441A5</color>
     <color name="share_button_color">#689F38</color>
 
+    <color name="tumblr_login_button_color">#529ecc</color>
+
+    <!-- Dialog post box border color -->
+    <color name="dialog_post_box_border_color">#BDBDBD</color>
 
 </resources>
