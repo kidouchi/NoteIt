@@ -1,6 +1,8 @@
 .gradle
+*.json
 *.properties
 *.iml
+*.txt
 gradle.properties
 /local.properties
 .idea/
