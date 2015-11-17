@@ -30,9 +30,9 @@ android {
     signingConfigs {
         release {
             storeFile file('/Users/iuy407/Desktop/AndroidProjects/android.jks')
-            storePassword 'Digifreak106~'
+            storePassword KEYSTORE_PASSWORD
             keyAlias 'MyAndroidKey'
-            keyPassword 'Digifreak106~'
+            keyPassword KEY_PASSWORD
         }
     }
     buildTypes {
